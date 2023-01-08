@@ -1,0 +1,37 @@
+ "Databricks mounts create a link between a workspace and cloud object storage,
+ which enables you to interact with cloud object storage using familiar file paths relative to the Databricks file system. 
+ Mounts work by creating a local alias under the /mnt directory"
+ 
+ # Code for Mount Point Creation
+ 
+storage_account_name = "Datalakename"
+client_id            = ""
+tenant_id            = ""
+client_secret        = ""
+
+configs = {"fs.azure.account.auth.type": "OAuth",
+           "fs.azure.account.oauth.provider.type": "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider",
+           "fs.azure.account.oauth2.client.id": f"{client_id}",
+           "fs.azure.account.oauth2.client.secret": f"{client_secret}",
+           "fs.azure.account.oauth2.client.endpoint": f"https://login.microsoftonline.com/{tenant_id}/oauth2/token"}
+           
+ container_name = "raw"   # Provide the name of the container of data lake
+dbutils.fs.mount(
+  source = f"abfss://{container_name}@{storage_account_name}.dfs.core.windows.net/",
+  mount_point = f"/mnt/{storage_account_name}/{container_name}",
+  extra_configs = configs)
+  
+ dbutils.fs.ls("/mnt/testdl/raw")  # to check what are files available in the container
+ dbutils.fs.mounts()    # to display the mountpoints
+ dbutils.fs.unmount("/mnt/<mount-name>") # to unmount the existing mount point. 
+ 
+ # User Defined Function for creating Mount Points
+ def mount_adls(container_name):
+  dbutils.fs.mount(
+    source = f"abfss://{container_name}@{storage_account_name}.dfs.core.windows.net/",
+    mount_point = f"/mnt/{storage_account_name}/{container_name}",
+    extra_configs = configs)
+    
+   # Calling the methods
+   mount_adls("processed") 
+    
