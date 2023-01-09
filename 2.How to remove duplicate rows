@@ -1,0 +1,24 @@
+
+# Putting Sample Data for testing
+dbutils.fs.put("/scenarios/duplicates.csv","""id,name,loc,updated_date
+1,ravi,bangalore,2021-01-01
+1,ravi,chennai,2022-02-02
+1,ravi,Hyderabad,2022-06-10
+2,Raj,bangalore,2021-01-01
+2,Raj,chennai,2022-02-02
+3,Raj,Hyderabad,2022-06-10
+4,Prasad,bangalore,2021-01-01
+5,Mahesh,chennai,2022-02-02
+4,Prasad,Hyderabad,2022-06-10
+""")
+
+df1=spark.read.csv("/scenarios/duplicates.csv",header=True,inferSchema=True)  
+
+# Method 1: Droping duplicates keeping the latest record based on updated_date
+from pyspark.sql.functions import col
+df2=df1.orderBy(col("updated_date").desc()).dropDuplicates(["id"])
+display(df2)
+
+# Method 2 Using Window
+df1=spark.read.csv("/scenarios/duplicates.csv",header=True,inferSchema=True)
+display(df1)
