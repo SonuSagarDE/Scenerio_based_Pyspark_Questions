@@ -1,0 +1,40 @@
+## Step 1 - Read the CSV file using the spark dataframe reader
+#### It is good practice to always create/define schema 
+
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, DoubleType
+
+sample_schema = StructType(fields=[StructField("Id", IntegerType(), False),
+                                     StructField("Ref", StringType(), True),
+                                     StructField("name", StringType(), True),
+                                     StructField("location", StringType(), True),
+                                     StructField("country", StringType(), True),
+                                     StructField("lat", DoubleType(), True),
+                                     StructField("lng", DoubleType(), True),
+                                     StructField("alt", IntegerType(), True),
+                                     StructField("url", StringType(), True)
+])
+
+sample_df = spark.read \
+.option("header", True) \
+.schema(sample_schema) \
+.csv("/mnt/datalake/raw/Sample.csv")
+
+## Step 2 - Select only the required columns
+from pyspark.sql.functions import col
+Sample_selected_df = circuits_df.select(col("Id"), col("Ref"), col("name"), col("location"), col("country"), col("lat"), col("lng"), col("alt"))
+
+## Step 3 - Rename the columns as required
+
+Sample_renamed_df = Sample_selected_df.withColumnRenamed("Id", "Loc_id") \
+.withColumnRenamed("Ref", "Loc_ref") \
+.withColumnRenamed("lat", "latitude") \
+.withColumnRenamed("lng", "longitude") \
+.withColumnRenamed("alt", "altitude") 
+
+## Step 4 - Add ingestion date to the dataframe
+
+from pyspark.sql.functions import current_timestamp
+Sample_final_df = Sample_renamed_df.withColumn("ingestion_date", current_timestamp())
+
+##Step 5 - Write data to datalake as parquet
+circuits_final_df.write.mode("overwrite").parquet("/mnt/formula1dl/processed/circuits")
