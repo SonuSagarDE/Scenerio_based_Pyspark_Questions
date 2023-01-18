@@ -37,4 +37,4 @@ from pyspark.sql.functions import current_timestamp
 Sample_final_df = Sample_renamed_df.withColumn("ingestion_date", current_timestamp())
 
 ##Step 5 - Write data to datalake as parquet
-circuits_final_df.write.mode("overwrite").parquet("/mnt/formula1dl/processed/circuits")
+circuits_final_df.write.mode("overwrite").parquet("/mnt/datalake/processed/circuits")
