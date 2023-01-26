@@ -1,0 +1,7 @@
+dbutils.fs.put("/schenarios/double_pipe.csv","""id||name||loc
+1||ravi||Bangalore
+2||Raj||Chennai
+3||Mahesh||Hyderabad
+4||Prasad||Chennai
+5||Sridhar||Pune
+""",True)
