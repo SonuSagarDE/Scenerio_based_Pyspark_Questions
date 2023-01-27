@@ -5,3 +5,26 @@ dbutils.fs.put("/schenarios/double_pipe.csv","""id||name||loc
 4||Prasad||Chennai
 5||Sridhar||Pune
 """,True)
+df=spark.read.csv("/schenarios/double_pipe.csv",header=True,sep="||")
+
+dbutils.fs.put("/scenarios/multi_sep.csv","""id,name,loc,marks
+1,ravi,Bangalore,35|45|55|65
+2,Raj,Chennai,35|45|55|65
+3,Mahesh,Hyderabad,35|45|55|65
+4,Prasad,Chennai,35|45|55|65
+5,Sridhar,Pune,35|45|55|65
+""",True)
+
+df_multi=spark.read.csv("/scenarios/multi_sep.csv",header=True)
+display(df_multi)
+
+from pyspark.sql.functions import col,split
+df_final=df_multi.withColumn("mark_split",split(col("marks"),"[|]"))\
+                 .withColumn("SUB1",col("mark_split")[0])\
+                 .withColumn("SUB2",col("mark_split")[1])\
+                 .withColumn("SUB3",col("mark_split")[2])\
+                 .withColumn("SUB4",col("mark_split")[3])\
+                 .drop("mark_split","marks")
+                 
+display(df_final)
+
