@@ -3,3 +3,7 @@
 %fs ls /databricks-datasets/  ## to check datasets available in DB community 
 df_airlines = spark.read.csv("/databricks-datasets/asa/airlines",header=True)
 df_airlines = df_airlines.withColumn("PART_ID",spark_partition_id())
+
+display(df_airlines.groupBy("PART_ID").count())
+
+Use repartition(n) to uniformally partitioning the data
