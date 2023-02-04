@@ -1,0 +1,9 @@
+df_emp_csv=spark.read.option("nullvalue","null").csv("/FileStore/sourcetable/emp.csv",header=True,inferSchema=True)
+display(df_emp_csv)
+
+using monotonically_increasing_id
+
+
+from pyspark.sql.functions import monotonically_increasing_id
+df_emp_csv=df_emp_csv.withColumn("Key_ID",monotonically_increasing_id()+1)
+display(df_emp_csv)
