@@ -1,9 +1,13 @@
 df_emp_csv=spark.read.option("nullvalue","null").csv("/FileStore/sourcetable/emp.csv",header=True,inferSchema=True)
 display(df_emp_csv)
 
-using monotonically_increasing_id
-
+## using monotonically_increasing_id
 
 from pyspark.sql.functions import monotonically_increasing_id
 df_emp_csv=df_emp_csv.withColumn("Key_ID",monotonically_increasing_id()+1)
+display(df_emp_csv)
+
+## using crc_32 (Hash key), generated duplicates Key when records is more than 100K
+from pyspark.sql.functions import crc32,col
+df_emp_csv=df_emp_csv.withColumn("Crc_32_key",crc32(col("EMPNO").cast("string")))
 display(df_emp_csv)
