@@ -11,3 +11,10 @@ id,emp,joblocation
 5,prince,mumbai
 """,True)
 
+df=spark.read.csv("/scenario_files/empty_header.csv",header=True)
+display(df)
+
+## use rdd to read the data 
+rdd = sc.textFile("/scenario_files/empty_header.csv")
+rdd.collect()
+
