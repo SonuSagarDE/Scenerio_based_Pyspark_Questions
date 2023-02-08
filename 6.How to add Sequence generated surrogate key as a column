@@ -11,3 +11,10 @@ display(df_emp_csv)
 from pyspark.sql.functions import crc32,col
 df_emp_csv=df_emp_csv.withColumn("Crc_32_key",crc32(col("EMPNO").cast("string")))
 display(df_emp_csv)
+
+## using md5 (not suggested for more than 50 or 100 millions of record)
+
+from pyspark.sql.functions import md5,col
+
+df_emp_csv  = df_emp_csv.withColumn("MD5_KEY",md5(col("EMPNO").cast("string")))
+display(df_emp_csv)
