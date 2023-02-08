@@ -18,3 +18,10 @@ display(df)
 rdd = sc.textFile("/scenario_files/empty_header.csv")
 rdd.collect()
 
+
+final_rdd = rdd.zipWithIndex().filter(lambda x: x[1] > 2).map(lambda a :a[0].split(","))
+final_rdd.collect()
+
+# get columns into list to create DataFrame
+columns=final_rdd.collect()[0]
+columns
