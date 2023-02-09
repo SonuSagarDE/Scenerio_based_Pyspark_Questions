@@ -18,3 +18,5 @@ from pyspark.sql.functions import md5,col
 
 df_emp_csv  = df_emp_csv.withColumn("MD5_KEY",md5(col("EMPNO").cast("string")))
 display(df_emp_csv)
+
+using sha2 (256 suggested for 100 to 200 millions of record, 512 is suggested till 500 millions records)
