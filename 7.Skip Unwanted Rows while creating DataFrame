@@ -25,3 +25,10 @@ final_rdd.collect()
 # get columns into list to create DataFrame
 columns=final_rdd.collect()[0]
 columns
+
+# skip header/columns from data 
+columns=final_rdd.first() #extract header for filter that row
+data = final_rdd.filter(lambda col: col != columns)   #filter out header
+data.collect()
+
+data.toDF(columns).show()
